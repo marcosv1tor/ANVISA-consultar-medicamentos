@@ -9,7 +9,21 @@ const PORT = process.env.PORT || 3001;
 
 // Middlewares
 app.use(helmet());
-app.use(cors());
+
+// Configuração de CORS para produção
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://anvisa-consultar-medicamentos.vercel.app',
+    'https://anvisa-consultar-medicamentos-git-main-marcosvitors-projects.vercel.app',
+    'https://anvisa-consultar-medicamentos-marcosvitors-projects.vercel.app'
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(morgan('combined'));
 app.use(express.json());
 

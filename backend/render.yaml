@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: medware-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: true
+      - key: PUPPETEER_EXECUTABLE_PATH
+        value: /usr/bin/google-chrome-stable
+    region: oregon
+    scaling:
+      minInstances: 1
+      maxInstances: 1
+    healthCheckPath: /health
+    disk:
+      name: medware-backend-disk
+      size: 1GB
+      mountPath: /opt/render/project/src
