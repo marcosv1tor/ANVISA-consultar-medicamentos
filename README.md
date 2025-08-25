@@ -11,6 +11,7 @@ Uma Single Page Application (SPA) desenvolvida em Vue.js 3 para consulta de medi
 - **Histórico de Buscas**: Acesse suas pesquisas recentes
 - **Tratamento de Erros**: Sistema robusto de tratamento de erros
 - **Estados de Carregamento**: Indicadores visuais durante operações
+- **Testes Unitarios**: Garantia de bom funcionamento dos componentes do sistema
 
 ## 🛠️ Tecnologias Utilizadas
 
