@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Instância do axios configurada para nossa API intermediária
 const api = axios.create({
-  baseURL: 'http://localhost:3001/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api',
   timeout: 10000,
   headers: {
     'Accept': 'application/json',
