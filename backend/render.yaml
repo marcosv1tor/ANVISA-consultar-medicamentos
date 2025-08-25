@@ -3,10 +3,7 @@ services:
     name: medware-backend
     env: node
     plan: free
-    buildCommand: |
-      npm install
-      mkdir -p .cache/puppeteer
-      npx puppeteer browsers install chrome
+    buildCommand: npm install && mkdir -p .cache/puppeteer && npx puppeteer browsers install chrome
     startCommand: npm start
     envVars:
       - key: NODE_ENV
