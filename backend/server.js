@@ -17,7 +17,9 @@ const corsOptions = {
     'http://localhost:5173',
     'https://anvisa-consultar-medicamentos.vercel.app',
     'https://anvisa-consultar-medicamentos-git-main-marcosvitors-projects.vercel.app',
-    'https://anvisa-consultar-medicamentos-marcosvitors-projects.vercel.app'
+    'https://anvisa-consultar-medicamentos-marcosvitors-projects.vercel.app',
+    'https://anvisa-consultar-medicamentos-iscs546ok-marcosv1tors-projects.vercel.app',
+    'https://medware-frontend.vercel.app'
   ],
   credentials: true,
   optionsSuccessStatus: 200
