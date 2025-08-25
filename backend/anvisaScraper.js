@@ -1,6 +1,8 @@
 const puppeteer = require('puppeteer');
 const glob = require('glob');
 const fs = require('fs');
+const os = require('os');
+const path = require('path');
 
 class AnvisaScraper {
   constructor() {
@@ -22,30 +24,32 @@ class AnvisaScraper {
     // Caminhos possíveis do Chrome no Render
     const possiblePaths = [
       process.env.PUPPETEER_EXECUTABLE_PATH,
-      '/opt/render/.cache/puppeteer/chrome/linux-*/chrome-linux*/chrome',
+      process.env.PUPPETEER_CACHE_DIR ? `${process.env.PUPPETEER_CACHE_DIR}/chrome/linux-*/chrome-linux*/chrome` : null,
+      '/home/render/.cache/puppeteer/chrome/linux-*/chrome-linux*/chrome',
+      '/opt/render/project/.cache/puppeteer/chrome/linux-*/chrome-linux*/chrome',
       '/usr/bin/google-chrome-stable',
       '/usr/bin/google-chrome',
       '/usr/bin/chromium-browser',
       '/usr/bin/chromium'
     ];
 
-    for (const path of possiblePaths) {
-      if (!path) continue;
+    for (const chromePath of possiblePaths) {
+      if (!chromePath) continue;
       
       try {
         // Se contém wildcard, usar glob
-        if (path.includes('*')) {
-          const matches = glob.sync(path);
+        if (chromePath.includes('*')) {
+          const matches = glob.sync(chromePath);
           if (matches.length > 0 && fs.existsSync(matches[0])) {
             console.log(`✅ Chrome encontrado via glob: ${matches[0]}`);
             return matches[0];
           }
-        } else if (fs.existsSync(path)) {
-          console.log(`✅ Chrome encontrado: ${path}`);
-          return path;
+        } else if (fs.existsSync(chromePath)) {
+          console.log(`✅ Chrome encontrado: ${chromePath}`);
+          return chromePath;
         }
       } catch (error) {
-        console.log(`❌ Erro ao verificar ${path}:`, error.message);
+        console.log(`❌ Erro ao verificar ${chromePath}:`, error.message);
       }
     }
 
