@@ -30,8 +30,21 @@ class AnvisaScraper {
         ]
       };
       
-      // Em produção, usar configuração padrão do Puppeteer
-      // O Chromium será baixado automaticamente durante npm install
+      // Configurar executável do Chrome para produção no Render
+      if (isProduction) {
+        // Usar o Chrome instalado pelo comando 'npx puppeteer browsers install chrome'
+        const chromePath = '/opt/render/.cache/puppeteer/chrome/linux-*/chrome-linux64/chrome';
+        try {
+          const fs = require('fs');
+          const glob = require('glob');
+          const chromeFiles = glob.sync(chromePath);
+          if (chromeFiles.length > 0) {
+            puppeteerConfig.executablePath = chromeFiles[0];
+          }
+        } catch (error) {
+          console.log('⚠️ Não foi possível encontrar Chrome instalado, usando configuração padrão');
+        }
+      }
       
       this.browser = await puppeteer.launch(puppeteerConfig);
 
