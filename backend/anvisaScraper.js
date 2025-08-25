@@ -1,9 +1,56 @@
 const puppeteer = require('puppeteer');
+const glob = require('glob');
+const fs = require('fs');
 
 class AnvisaScraper {
   constructor() {
     this.browser = null;
     this.page = null;
+  }
+
+  // Detectar automaticamente o executável do Chrome no Render
+  findChromeExecutable() {
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    if (!isProduction) {
+      console.log('🔧 Ambiente de desenvolvimento - usando Chromium padrão do Puppeteer');
+      return null; // Usar padrão do Puppeteer
+    }
+
+    console.log('🔍 Procurando executável do Chrome no Render...');
+    
+    // Caminhos possíveis do Chrome no Render
+    const possiblePaths = [
+      process.env.PUPPETEER_EXECUTABLE_PATH,
+      '/opt/render/.cache/puppeteer/chrome/linux-*/chrome-linux*/chrome',
+      '/usr/bin/google-chrome-stable',
+      '/usr/bin/google-chrome',
+      '/usr/bin/chromium-browser',
+      '/usr/bin/chromium'
+    ];
+
+    for (const path of possiblePaths) {
+      if (!path) continue;
+      
+      try {
+        // Se contém wildcard, usar glob
+        if (path.includes('*')) {
+          const matches = glob.sync(path);
+          if (matches.length > 0 && fs.existsSync(matches[0])) {
+            console.log(`✅ Chrome encontrado via glob: ${matches[0]}`);
+            return matches[0];
+          }
+        } else if (fs.existsSync(path)) {
+          console.log(`✅ Chrome encontrado: ${path}`);
+          return path;
+        }
+      } catch (error) {
+        console.log(`❌ Erro ao verificar ${path}:`, error.message);
+      }
+    }
+
+    console.log('⚠️ Chrome não encontrado, usando configuração padrão');
+    return null;
   }
 
   async initialize() {
@@ -12,6 +59,8 @@ class AnvisaScraper {
       
       // Configurações específicas para produção (Render)
       const isProduction = process.env.NODE_ENV === 'production';
+      const chromeExecutable = this.findChromeExecutable();
+      
       const puppeteerConfig = {
         headless: 'new',
         args: [
@@ -26,25 +75,27 @@ class AnvisaScraper {
           '--disable-backgrounding-occluded-windows',
           '--disable-renderer-backgrounding',
           '--disable-features=TranslateUI',
-          '--disable-ipc-flooding-protection'
+          '--disable-ipc-flooding-protection',
+          '--disable-web-security',
+          '--disable-features=VizDisplayCompositor'
         ]
       };
       
-      // Configurar executável do Chrome para produção no Render
-      if (isProduction) {
-        // Usar o Chrome instalado pelo comando 'npx puppeteer browsers install chrome'
-        const chromePath = '/opt/render/.cache/puppeteer/chrome/linux-*/chrome-linux64/chrome';
-        try {
-          const fs = require('fs');
-          const glob = require('glob');
-          const chromeFiles = glob.sync(chromePath);
-          if (chromeFiles.length > 0) {
-            puppeteerConfig.executablePath = chromeFiles[0];
-          }
-        } catch (error) {
-          console.log('⚠️ Não foi possível encontrar Chrome instalado, usando configuração padrão');
-        }
+      // Configurar executável do Chrome se encontrado
+      if (chromeExecutable) {
+        puppeteerConfig.executablePath = chromeExecutable;
+        console.log(`🎯 Usando Chrome: ${chromeExecutable}`);
+      } else {
+        console.log('🔧 Usando Chromium padrão do Puppeteer');
       }
+      
+      // Log das configurações para debug
+      console.log('⚙️ Configurações do Puppeteer:', {
+        isProduction,
+        executablePath: puppeteerConfig.executablePath || 'padrão',
+        headless: puppeteerConfig.headless,
+        argsCount: puppeteerConfig.args.length
+      });
       
       this.browser = await puppeteer.launch(puppeteerConfig);
 
