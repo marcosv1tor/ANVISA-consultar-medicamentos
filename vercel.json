@@ -1,15 +1,17 @@
 {
-  "buildCommand": "cd frontend && npm run vercel-build",
-  "outputDirectory": "frontend/dist",
-  "installCommand": "cd frontend && npm install",
+  "installCommand": "if [ -d frontend ]; then cd frontend; fi; npm ci || npm install",
+  "buildCommand": "if [ -d frontend ]; then cd frontend; fi; npm run vercel-build",
+  "outputDirectory": "dist",
   "framework": null,
   "env": {
     "VITE_API_BASE_URL": "https://medware-backend.onrender.com/api"
   },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
+  "build": {
+    "env": {
+      "VITE_API_BASE_URL": "https://medware-backend.onrender.com/api"
     }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
