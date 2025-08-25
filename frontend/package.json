@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "node node_modules/vite/bin/vite.js build",
-    "vercel-build": "node node_modules/vite/bin/vite.js build && node -e \"const fs=require('fs');const path=require('path');const src=path.join('dist');const dst=path.join('..','dist');fs.rmSync(dst,{recursive:true,force:true});fs.mkdirSync(dst,{recursive:true});fs.readdirSync(src).forEach(f=>{const s=path.join(src,f);const d=path.join(dst,f);fs.cpSync(s,d,{recursive:true});});\"",
+    "vercel-build": "node node_modules/vite/bin/vite.js build",
     "preview": "vite preview",
     "serve": "vite preview",
     "test": "vitest",
