@@ -3,14 +3,15 @@ services:
     name: medware-backend
     env: node
     plan: free
-    buildCommand: npm install
+    buildCommand: |
+      npm install
+      npx puppeteer browsers install chrome
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-      # Removendo PUPPETEER_SKIP_CHROMIUM_DOWNLOAD para usar Chromium padrão
-      # - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
-      #   value: true
+      - key: PUPPETEER_CACHE_DIR
+        value: /opt/render/.cache/puppeteer
     region: oregon
     scaling:
       minInstances: 1
