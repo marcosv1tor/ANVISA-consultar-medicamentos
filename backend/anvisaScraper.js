@@ -30,15 +30,8 @@ class AnvisaScraper {
         ]
       };
       
-      // Configurar executável do Chrome para produção
-      if (isProduction) {
-        // Tentar usar o caminho da variável de ambiente primeiro
-        if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-          puppeteerConfig.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-        }
-        // Se não encontrar, deixar o Puppeteer detectar automaticamente
-        // após a instalação via 'npx puppeteer browsers install chrome'
-      }
+      // Em produção, usar configuração padrão do Puppeteer
+      // O Chromium será baixado automaticamente durante npm install
       
       this.browser = await puppeteer.launch(puppeteerConfig);
 
