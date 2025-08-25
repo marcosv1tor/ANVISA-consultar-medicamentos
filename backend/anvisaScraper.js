@@ -9,7 +9,11 @@ class AnvisaScraper {
   async initialize() {
     try {
       console.log('🚀 Inicializando navegador Puppeteer...');
-      this.browser = await puppeteer.launch({
+      
+      // Configurações específicas para produção (Render)
+      const isProduction = process.env.NODE_ENV === 'production' || process.env.RENDER;
+      
+      const launchOptions = {
         headless: 'new',
         args: [
           '--no-sandbox',
@@ -18,9 +22,26 @@ class AnvisaScraper {
           '--disable-accelerated-2d-canvas',
           '--no-first-run',
           '--no-zygote',
-          '--disable-gpu'
+          '--disable-gpu',
+          '--disable-web-security',
+          '--disable-features=VizDisplayCompositor'
         ]
-      });
+      };
+      
+      // Configurações adicionais para Render
+      if (isProduction) {
+        launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/google-chrome';
+        launchOptions.args.push(
+          '--disable-extensions',
+          '--disable-plugins',
+          '--disable-background-timer-throttling',
+          '--disable-backgrounding-occluded-windows',
+          '--disable-renderer-backgrounding',
+          '--single-process'
+        );
+      }
+      
+      this.browser = await puppeteer.launch(launchOptions);}
 
       this.page = await this.browser.newPage();
       
@@ -30,11 +51,15 @@ class AnvisaScraper {
       // Configurar viewport
       await this.page.setViewport({ width: 1366, height: 768 });
       
+      // Configurar timeouts mais longos para produção
+      await this.page.setDefaultTimeout(60000);
+      await this.page.setDefaultNavigationTimeout(60000);
+      
       // Navegar para a página principal da ANVISA
       console.log('🌐 Acessando site da ANVISA...');
       await this.page.goto('https://consultas.anvisa.gov.br/', {
-        waitUntil: 'networkidle2',
-        timeout: 30000
+        waitUntil: 'domcontentloaded',
+        timeout: 60000
       });
       
       console.log('✅ Navegador inicializado com sucesso');
@@ -47,11 +72,23 @@ class AnvisaScraper {
 
   async searchMedicines(nomeMedicamento) {
     try {
-      if (!this.page) {
-        throw new Error('Navegador não inicializado');
+      if (!this.page || !this.browser) {
+        console.log('⚠️ Navegador não inicializado, tentando reinicializar...');
+        const success = await this.initialize();
+        if (!success) {
+          throw new Error('Falha ao inicializar navegador');
+        }
       }
 
       console.log(`🔍 Buscando medicamento: ${nomeMedicamento}`);
+      
+      // Verificar se a página ainda está ativa
+      try {
+        await this.page.evaluate(() => document.readyState);
+      } catch (pageError) {
+        console.log('⚠️ Página inativa, reinicializando...');
+        await this.initialize();
+      }
       
       // Fazer a requisição para a API usando o contexto do navegador
       const response = await this.page.evaluate(async (nome) => {
