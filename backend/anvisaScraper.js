@@ -1,60 +1,22 @@
 const puppeteer = require('puppeteer');
-const glob = require('glob');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
+
+// Função para encontrar o executável do Chrome (simplificada)
+function findChromeExecutable() {
+    // Deixa o Puppeteer usar sua configuração automática
+    // O arquivo puppeteer.config.cjs define o diretório de cache
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+        console.log(`Usando Chrome do ambiente: ${process.env.PUPPETEER_EXECUTABLE_PATH}`);
+        return process.env.PUPPETEER_EXECUTABLE_PATH;
+    }
+    
+    console.log('Usando configuração automática do Puppeteer');
+    return null; // Deixa o Puppeteer decidir
+}
 
 class AnvisaScraper {
   constructor() {
     this.browser = null;
     this.page = null;
-  }
-
-  // Detectar automaticamente o executável do Chrome no Render
-  findChromeExecutable() {
-    const isProduction = process.env.NODE_ENV === 'production';
-    
-    if (!isProduction) {
-      console.log('🔧 Ambiente de desenvolvimento - usando Chromium padrão do Puppeteer');
-      return null; // Usar padrão do Puppeteer
-    }
-
-    console.log('🔍 Procurando executável do Chrome no Render...');
-    
-    // Caminhos possíveis do Chrome no Render
-    const possiblePaths = [
-      process.env.PUPPETEER_EXECUTABLE_PATH,
-      process.env.PUPPETEER_CACHE_DIR ? `${process.env.PUPPETEER_CACHE_DIR}/chrome/linux-*/chrome-linux*/chrome` : null,
-      '/home/render/.cache/puppeteer/chrome/linux-*/chrome-linux*/chrome',
-      '/opt/render/project/.cache/puppeteer/chrome/linux-*/chrome-linux*/chrome',
-      '/usr/bin/google-chrome-stable',
-      '/usr/bin/google-chrome',
-      '/usr/bin/chromium-browser',
-      '/usr/bin/chromium'
-    ];
-
-    for (const chromePath of possiblePaths) {
-      if (!chromePath) continue;
-      
-      try {
-        // Se contém wildcard, usar glob
-        if (chromePath.includes('*')) {
-          const matches = glob.sync(chromePath);
-          if (matches.length > 0 && fs.existsSync(matches[0])) {
-            console.log(`✅ Chrome encontrado via glob: ${matches[0]}`);
-            return matches[0];
-          }
-        } else if (fs.existsSync(chromePath)) {
-          console.log(`✅ Chrome encontrado: ${chromePath}`);
-          return chromePath;
-        }
-      } catch (error) {
-        console.log(`❌ Erro ao verificar ${chromePath}:`, error.message);
-      }
-    }
-
-    console.log('⚠️ Chrome não encontrado, usando configuração padrão');
-    return null;
   }
 
   async initialize() {
@@ -63,8 +25,6 @@ class AnvisaScraper {
       
       // Configurações específicas para produção (Render)
       const isProduction = process.env.NODE_ENV === 'production';
-      const chromeExecutable = this.findChromeExecutable();
-      
       const puppeteerConfig = {
         headless: 'new',
         args: [
@@ -79,27 +39,12 @@ class AnvisaScraper {
           '--disable-backgrounding-occluded-windows',
           '--disable-renderer-backgrounding',
           '--disable-features=TranslateUI',
-          '--disable-ipc-flooding-protection',
-          '--disable-web-security',
-          '--disable-features=VizDisplayCompositor'
+          '--disable-ipc-flooding-protection'
         ]
       };
       
-      // Configurar executável do Chrome se encontrado
-      if (chromeExecutable) {
-        puppeteerConfig.executablePath = chromeExecutable;
-        console.log(`🎯 Usando Chrome: ${chromeExecutable}`);
-      } else {
-        console.log('🔧 Usando Chromium padrão do Puppeteer');
-      }
-      
-      // Log das configurações para debug
-      console.log('⚙️ Configurações do Puppeteer:', {
-        isProduction,
-        executablePath: puppeteerConfig.executablePath || 'padrão',
-        headless: puppeteerConfig.headless,
-        argsCount: puppeteerConfig.args.length
-      });
+      // Em produção, usar configuração padrão do Puppeteer
+      // O Chromium será baixado automaticamente durante npm install
       
       this.browser = await puppeteer.launch(puppeteerConfig);
 

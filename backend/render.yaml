@@ -4,17 +4,20 @@ services:
     env: node
     plan: free
     buildCommand: |
-      npm ci --only=production
-      mkdir -p ~/.cache/puppeteer
-      npx puppeteer browsers install chrome --path ~/.cache/puppeteer
+      npm install
+      mkdir -p .cache/puppeteer
+      npx puppeteer browsers install chrome
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PUPPETEER_CACHE_DIR
-        value: ~/.cache/puppeteer
+        value: /opt/render/project/src/.cache/puppeteer
       - key: PUPPETEER_EXECUTABLE_PATH
-        value: ~/.cache/puppeteer/chrome/linux-*/chrome-linux*/chrome
+        value: /opt/render/project/src/.cache/puppeteer/chrome/linux-*/chrome-linux*/chrome
+      # Removendo PUPPETEER_SKIP_CHROMIUM_DOWNLOAD para usar Chromium padrão
+      # - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+      #   value: true
     region: oregon
     scaling:
       minInstances: 1
