@@ -11,34 +11,44 @@ const PORT = process.env.PORT || 3001;
 app.use(helmet());
 
 // Configuração de CORS para produção
+const defaultAllowed = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://anvisa-consultar-medicamentos.vercel.app',
+  'https://medware-frontend.vercel.app',
+  'https://anvisa-consultar-medicamentos-fymn34q67-marcosv1tors-projects.vercel.app/'
+];
+const envAllowed = (process.env.ALLOWED_ORIGINS || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+const allowedOrigins = new Set([...defaultAllowed, ...envAllowed]);
+
+// Permitir automaticamente URLs de preview do Vercel deste time
+// Ex.: https://<projeto>-<hash>-marcosvitors-projects.vercel.app
+//      https://<projeto>-<hash>-marcosv1tors-projects.vercel.app
+const vercelPreviewRegex = /^https:\/\/[a-z0-9-]+-marcosv[i1]tors-projects\.vercel\.app$/i;
+
 const corsOptions = {
-  origin: function (origin, callback) {
-    // Permitir requisições sem origin (ex: mobile apps, Postman)
+  origin: (origin, callback) => {
+    // Permitir requisições server-to-server (sem header Origin)
     if (!origin) return callback(null, true);
-    
-    // Lista de origens permitidas
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'http://localhost:5173'
-    ];
-    
-    // Verificar se é um domínio do Vercel
-    const isVercelDomain = /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app$/.test(origin) ||
-                          /^https:\/\/anvisa-consultar-medicamentos.*\.vercel\.app$/.test(origin) ||
-                          /^https:\/\/medware.*\.vercel\.app$/.test(origin);
-    
-    if (allowedOrigins.includes(origin) || isVercelDomain) {
-      callback(null, true);
-    } else {
-      console.log('🚫 CORS bloqueado para origem:', origin);
-      callback(new Error('Não permitido pelo CORS'));
+
+    if (allowedOrigins.has(origin) || vercelPreviewRegex.test(origin)) {
+      return callback(null, true);
     }
+
+    console.warn(`🚫 CORS bloqueado para origem: ${origin}`);
+    return callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(morgan('combined'));
 app.use(express.json());
 
@@ -132,7 +142,6 @@ app.get('/api/medicamentos/buscar', async (req, res) => {
     });
   }
 });
-
 
 // idProduto": 1081105,
 //             "numeroRegistro": "102351216",
