@@ -584,7 +584,7 @@ export default {
 }
 
 .section-title {
-  color: #0d6efd;
+  color: #003770;
   font-weight: 600;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
@@ -595,7 +595,7 @@ export default {
   background: #f8f9fa;
   border-radius: 8px;
   padding: 1.5rem;
-  border-left: 4px solid #0d6efd;
+  border-left: 4px solid #003770;
 }
 
 .info-grid {

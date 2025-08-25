@@ -136,10 +136,10 @@ export default {
   width: 51px;
   height: 51px;
   margin: 6px;
-  border: 6px solid #0d6efd;
+  border: 6px solid #003770;
   border-radius: 50%;
   animation: spinner-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #0d6efd transparent transparent transparent;
+  border-color: #003770 transparent transparent transparent;
 }
 
 .spinner-ring:nth-child(1) {
@@ -164,7 +164,7 @@ export default {
 }
 
 .loading-text h5 {
-  color: #0d6efd;
+  color: #003770;
   font-weight: 600;
 }
 
@@ -183,7 +183,7 @@ export default {
 }
 
 .progress-bar {
-  background: linear-gradient(90deg, #0d6efd 0%, #0b5ed7 100%);
+  background: linear-gradient(90deg, #003770 0%, #002a5c 100%);
   border-radius: 4px;
   transition: width 0.3s ease;
 }

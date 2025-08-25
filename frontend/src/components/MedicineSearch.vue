@@ -190,7 +190,7 @@ export default {
 }
 
 .card-title {
-  color: #0d6efd;
+  color: #003770;
   font-weight: 600;
 }
 
@@ -200,19 +200,19 @@ export default {
 }
 
 .form-control:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: #003770;
+  box-shadow: 0 0 0 0.25rem rgba(0, 55, 112, 0.25);
 }
 
 .btn-primary {
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+  background-color: #003770;
+  border-color: #003770;
   font-weight: 500;
 }
 
 .btn-primary:hover {
-  background-color: #0b5ed7;
-  border-color: #0a58ca;
+  background-color: #002a5c;
+  border-color: #001f47;
 }
 
 .btn-primary:disabled {

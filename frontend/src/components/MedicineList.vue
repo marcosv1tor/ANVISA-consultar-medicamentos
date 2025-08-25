@@ -165,7 +165,7 @@ export default {
 .medicine-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  border-color: #0d6efd;
+  border-color: #003770;
 }
 
 .medicine-card .card-title {
@@ -189,7 +189,7 @@ export default {
 }
 
 .info-item:hover {
-  border-left-color: #0d6efd;
+  border-left-color: #003770;
 }
 
 .btn-outline-primary {
@@ -200,7 +200,7 @@ export default {
 
 .btn-outline-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 55, 112, 0.3);
 }
 
 .badge {
