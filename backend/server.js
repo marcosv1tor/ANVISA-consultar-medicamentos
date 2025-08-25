@@ -12,15 +12,28 @@ app.use(helmet());
 
 // Configuração de CORS para produção
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'https://anvisa-consultar-medicamentos.vercel.app',
-    'https://anvisa-consultar-medicamentos-git-main-marcosvitors-projects.vercel.app',
-    'https://anvisa-consultar-medicamentos-marcosvitors-projects.vercel.app',
-    'https://anvisa-consultar-medicamentos-iscs546ok-marcosv1tors-projects.vercel.app',
-    'https://medware-frontend.vercel.app'
-  ],
+  origin: function (origin, callback) {
+    // Permitir requisições sem origin (ex: mobile apps, Postman)
+    if (!origin) return callback(null, true);
+    
+    // Lista de origens permitidas
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://localhost:5173'
+    ];
+    
+    // Verificar se é um domínio do Vercel
+    const isVercelDomain = /^https:\/\/[a-zA-Z0-9-]+\.vercel\.app$/.test(origin) ||
+                          /^https:\/\/anvisa-consultar-medicamentos.*\.vercel\.app$/.test(origin) ||
+                          /^https:\/\/medware.*\.vercel\.app$/.test(origin);
+    
+    if (allowedOrigins.includes(origin) || isVercelDomain) {
+      callback(null, true);
+    } else {
+      console.log('🚫 CORS bloqueado para origem:', origin);
+      callback(new Error('Não permitido pelo CORS'));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };
