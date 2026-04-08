@@ -2,7 +2,7 @@
 
 Uma Single Page Application (SPA) desenvolvida em Vue.js 3 para consulta de medicamentos utilizando a API pública da ANVISA.
 
-## 📋 Funcionalidades
+## Funcionalidades
 
 - **Busca de Medicamentos**: Pesquise medicamentos por nome
 - **Listagem Responsiva**: Visualize resultados em cards responsivos
@@ -13,21 +13,21 @@ Uma Single Page Application (SPA) desenvolvida em Vue.js 3 para consulta de medi
 - **Estados de Carregamento**: Indicadores visuais durante operações
 - **Testes Unitarios**: Garantia de bom funcionamento dos componentes do sistema
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **Vue.js 3** - Framework JavaScript progressivo
 - **Bootstrap 5** - Framework CSS para design responsivo
 - **Axios** - Cliente HTTP para requisições à API
 - **Node.js** - Ambiente de execução JavaScript
 
-## 📦 Pré-requisitos
+## Pré-requisitos
 
 Antes de executar o projeto, certifique-se de ter instalado:
 
 - [Node.js](https://nodejs.org/) (versão 16 ou superior)
 - [npm](https://www.npmjs.com/) (geralmente vem com o Node.js)
 
-## 🚀 Instalação e Execução
+## Instalação e Execução
 
 ### 1. Clone ou baixe o projeto
 
@@ -55,7 +55,7 @@ npm run dev
 
 Abra seu navegador e acesse: `http://localhost:5173`
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 MEDWARE/
@@ -79,13 +79,13 @@ MEDWARE/
 └── README.md
 ```
 
-## 🔧 Scripts Disponíveis
+## Scripts Disponíveis
 
 - `npm run dev` - Executa o projeto em modo de desenvolvimento
 - `npm run build` - Gera build de produção
 - `npm run preview` - Visualiza o build de produção localmente
 
-## 📖 Como Usar
+## Como Usar
 
 1. **Buscar Medicamentos**:
    - Digite o nome do medicamento no campo de busca
@@ -103,7 +103,7 @@ MEDWARE/
 4. **Histórico de Buscas**:
    - Suas últimas 5 buscas ficam salvas e podem ser acessadas rapidamente
 
-## 🌐 API ANVISA
+## API ANVISA
 
 Este projeto consome a API pública da ANVISA para:
 
@@ -111,7 +111,7 @@ Este projeto consome a API pública da ANVISA para:
 - **Detalhes do Medicamento**: `https://consultas.anvisa.gov.br/api/consulta/medicamentos/produto/`
 - **Download de Bulas**: `https://consultas.anvisa.gov.br/api/consulta/medicamentos/arquivo/bula/parecer/`
 
-## 🎨 Design e Responsividade
+## Design e Responsividade
 
 - Interface moderna e intuitiva
 - Totalmente responsiva (mobile, tablet, desktop)
@@ -119,7 +119,7 @@ Este projeto consome a API pública da ANVISA para:
 - Feedback visual para todas as ações
 - Tratamento de estados de erro e carregamento
 
-## 🔍 Funcionalidades Técnicas
+## Funcionalidades Técnicas
 
 - **Componentização**: Arquitetura baseada em componentes Vue.js
 - **Gerenciamento de Estado**: Estado local com reatividade do Vue
@@ -127,14 +127,14 @@ Este projeto consome a API pública da ANVISA para:
 - **Performance**: Carregamento otimizado e lazy loading
 - **Acessibilidade**: Componentes acessíveis com ARIA labels
 
-## 📝 Observações
+## Observações
 
 - A aplicação depende da disponibilidade da API da ANVISA
 - Alguns medicamentos podem não ter bulas disponíveis para download
 - O histórico de buscas é salvo localmente no navegador
 - A aplicação funciona melhor em navegadores modernos
 
-## 🤝 Contribuição
+## Contribuição
 
 Para contribuir com o projeto:
 
@@ -144,7 +144,7 @@ Para contribuir com o projeto:
 4. Push para a branch (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
 
-## 📄 Licença
+## Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
